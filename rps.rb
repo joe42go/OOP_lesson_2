@@ -18,14 +18,14 @@ end
 
 class Human < Player
   def set_name
-    n = ""
+    name = ""
     loop do
       puts "What's your name?"
-      n = gets.chomp
-      break unless n.empty?
+      name = gets.chomp
+      break unless name.empty?
       puts "Sorry, must enter a value."
     end
-    self.name = n
+    self.name = name
   end
 
   def choose
@@ -124,13 +124,19 @@ class RPSGame
 
   def display_winner
     if human.move > computer.move
-      human.score += 1
       puts "#{human.name} won!"
     elsif human.move < computer.move
-      computer.score += 1
       puts "#{computer.name} won!"
     else
       puts "It's a tie!"
+    end
+  end
+
+  def update_score
+    if human.move > computer.move
+      human.score += 1
+    elsif human.move < computer.move
+      computer.score += 1
     end
   end
 
@@ -154,8 +160,7 @@ class RPSGame
       puts "Sorry, must be y or n."
     end
 
-    return false if answer.casecmp('n') == 0
-    return true if answer.casecmp('y') == 0
+    answer.casecmp('y') == 0
   end
 
   def play
@@ -168,9 +173,11 @@ class RPSGame
         computer.choose
         display_moves
         display_winner
+        update_score
         display_score
-        human.moves_history << human.move.value
-        computer.moves_history << computer.move.value
+        binding.pry
+        human.moves_history << "#{human.move}"
+        computer.moves_history << "#{computer.move}"
         display_moves_history
         break if human.won_entire_game? || computer.won_entire_game?
       end
